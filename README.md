@@ -1,5 +1,5 @@
 # 🎉 Sokol Events
-A small collection of procedures which aim to recreate raylib's key- and mouseevents functionality.
+A small collection of procedures that recreate raylib's key and mouse event functionality for sokol.
 
 ## Procedures
 Name | Similar To | Info
@@ -8,18 +8,18 @@ set_current_input_state | | Set the current `Input_State`. Useful for when you d
 get_mouse_pos | GetMousePosition | Get current mouse position
 get_mouse_delta | GetMouseDelta | Get mouse movement between frames
 get_scroll_delta | GetMouseWheelMoveV | Get mouse wheel movement
-mouse_in_window | | Returns `true` if the mouse is inside the window. `false` is not.
-key_down | IsKeyDown | Returns `true` if the key is pressed. `false` if not.
-key_pressed | IsKeyPressed | Returns `true` if the key is pressed this frame. `false` if not.
-key_released | IsKeyReleased | Returns `true` if the key is released this frame. `false` if not.
-key_combination_down | | Returns `true` if key_down is `true` for every key in the given combination. `false` if not.
-key_combination_pressed | | Returns `true` if all keys are pressed and `key_pressed` is true for *at least one* key. `false` if not.
-> Note: All listed procedures are procedure groups which have two members. One which takes an additional pointer to the input state. The other one doesn't take that pointer, however `set_current_input_state` needs to be called before. Otherwise it will cause a runtime assertion error.
+mouse_in_window | | Returns `true` if the mouse is inside the window, otherwise `false`.
+key_down | IsKeyDown | Returns `true` if the key is pressed, otherwise `false`.
+key_pressed | IsKeyPressed | Returns `true` if the key is pressed this frame, otherwise `false`.
+key_released | IsKeyReleased | Returns `true` if the key is released this frame, otherwise `false`.
+key_combination_down | | Returns `true` all keys are down (`key_down`), otherwise `false`.
+key_combination_pressed | | Returns `true` if all keys are down and `key_pressed` is true for *at least one* key, otherwise `false`.
+> Note: All listed procedures are procedure groups which have two members. One takes an additional pointer to the input state, while the other doesn't. For the latter, `set_current_input_state` must be called first, otherwise it will cause a runtime assertion error.
 
 ## Procedure call order
-You have to call two procedures every frame: `handle_event` and `update`
+You must call two procedures every frame: `handle_event` and `update`
 
-In your `event_cb` procedure:
+Call `handle_event` in your `event_cb` procedure:
 ```odin
 event_cb :: proc "c" (event: ^sapp.Event) {#
     context = runtime.default_context()
@@ -29,7 +29,7 @@ event_cb :: proc "c" (event: ^sapp.Event) {#
     // ... your code .... 
 }
 ```
-In your `frame_cb` procedure:
+Call `update` in your `frame_cb` procedure:
 ```odin
 frame_cb :: proc "c" () {
     // ... your code .... 
@@ -39,6 +39,9 @@ frame_cb :: proc "c" () {
 ```
 
 ## How this library works
-Sokol's callback order is the following:
-1. event_cb
-2. frame_cb
+> -[!Note]Sokol's callback order:
+> 1. event_cb
+> 2. frame_cb
+
+This library works by capturing events through `handle_event` and updating input states in `update`.
+It is crucial that the user calls `update` at the end of his `frame_cb` procedure, otherwise processed events are already updated before the user gets to use them. This is because of sokols callback order listed above.
