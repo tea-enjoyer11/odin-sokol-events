@@ -39,7 +39,7 @@ frame_cb :: proc "c" () {
 ```
 
 ## How this library works
-> NoteSokol's callback order:
+> Note: Sokol's callback order:
 > 1. event_cb
 > 2. frame_cb
 
