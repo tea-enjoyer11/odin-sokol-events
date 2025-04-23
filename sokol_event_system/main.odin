@@ -153,6 +153,7 @@ handle_event :: proc(event: ^sapp.Event, state: ^Input_State) {
             state.m_in_window = false
         case .MOUSE_MOVE:
             state.mrel = { event.mouse_dx, event.mouse_dy }
+            state.mpos = { event.mouse_x, event.mouse_y }
         case .MOUSE_SCROLL:
             state.mscroll = { event.scroll_x, event.scroll_y }
     }
