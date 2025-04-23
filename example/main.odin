@@ -5,6 +5,7 @@ import "core:fmt"
 import "core:math"
 import "core:math/linalg"
 import "core:time"
+import "core:strings"
 import "base:builtin"
 
 
@@ -204,7 +205,8 @@ frame :: proc "c" () {
         // sevent.key_combination_down({.A, .B}, &state.input_state),
         // sevent.key_combination_pressed({.A, .B}),
         // state.input_state._last_keys[.A], state.input_state.keys[.A], state.input_state.repeated_keys[.A]
-        sevent.key_down(.A), sevent.key_repeated(.A)
+        // sevent.key_down(.A), sevent.key_repeated(.A),
+        sevent.get_input_string(&state.input_state),
     )
 
     sg.begin_pass({ action = dframe.pass_action, swapchain = sglue.swapchain() })
