@@ -199,10 +199,12 @@ frame :: proc "c" () {
 
     sevent.set_current_input_state(&state.input_state)
     fmt.println(
-        sevent.key_down(.A, &state.input_state),
-        sevent.key_down(.A),
-        sevent.key_combination_down({.A, .B}, &state.input_state),
-        sevent.key_combination_pressed({.A, .B}),
+        // sevent.key_down(.A, &state.input_state),
+        // sevent.key_down(.A),
+        // sevent.key_combination_down({.A, .B}, &state.input_state),
+        // sevent.key_combination_pressed({.A, .B}),
+        // state.input_state._last_keys[.A], state.input_state.keys[.A], state.input_state.repeated_keys[.A]
+        sevent.key_down(.A), sevent.key_repeated(.A)
     )
 
     sg.begin_pass({ action = dframe.pass_action, swapchain = sglue.swapchain() })

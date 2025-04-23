@@ -41,13 +41,13 @@ def compile_shader(shader_file, shader_output, timestamp_file):
         print(f"Shader \"{shader_file}\" has not changed, skipping rebuild.")
 
 
-compile_shader("game/shader.glsl", "game/shader.odin", "game/shader.timestamp")
+compile_shader("example/shader.glsl", "example/shader.odin", "example/shader.timestamp")
 # compile_shader("game/text-shader.glsl", "game/text-shader.odin", "game/text-shader.timestamp")
 
 
 print("Building the game...")
-subprocess.run(["odin", "build", "game", "-debug"], check=True)
+subprocess.run(["odin", "build", "example", "-debug"], check=True)
 
 
 print("Running game.exe...")
-subprocess.run(["start", "game.exe"], shell=True)
+subprocess.run(["start", "example.exe"], shell=True)

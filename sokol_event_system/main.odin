@@ -15,6 +15,7 @@ Code_State :: enum Enum_Kind {
     down,
     pressed,
     released,
+    repeated,
 }
 
 Mouse_State :: bit_set[Code_State]
@@ -28,6 +29,7 @@ Input_State :: struct {
 
     mouse_buttons: map[Mouse_Button]Mouse_State,
     keys: map[Key_Code]Key_State,
+    _last_keys: map[Key_Code]Key_State,
 
     _tracked_keys: map[Key_Code]bool,
     _tracked_mouse: map[Mouse_Button]bool,
@@ -36,10 +38,15 @@ Input_State :: struct {
 handle_event :: proc(event: ^sapp.Event, state: ^Input_State) {
     #partial switch event.type {
         case .KEY_DOWN:
-            state.keys[event.key_code] = { .pressed, .down }
+            state.keys[event.key_code] += { .pressed, .down }
             state._tracked_keys[event.key_code] = true
+
+            if state._last_keys[event.key_code] == { .down } {
+                state.keys[event.key_code] += { .repeated }
+            }
         case .KEY_UP:
             state.keys[event.key_code] = { .released }
+            state._tracked_keys[event.key_code] = false
         case .MOUSE_DOWN:
             state.mouse_buttons[event.mouse_button] = { .pressed, .down }
             state._tracked_mouse[event.mouse_button] = true
@@ -57,6 +64,12 @@ handle_event :: proc(event: ^sapp.Event, state: ^Input_State) {
 }
 
 update :: proc(state: ^Input_State) {
+    backup: {
+        for key, val in state.keys {
+            state._last_keys[key] = val
+        }
+    }
+
     mouse: {
         state.mscroll = { 0, 0 }
         state.mrel = { 0, 0 }
@@ -144,11 +157,10 @@ key_released_curr_state :: proc(key: Key_Code) -> bool {
 
 // return true if the key is repeated
 key_repeated :: proc{ key_prepeated_state, key_prepeated_curr_state }
-key_prepeated_state :: proc(key: Key_Code, state: ^Input_State) -> bool {
-    panic("Not implemented yet") // TODO
-}
+key_prepeated_state :: proc(key: Key_Code, state: ^Input_State) -> bool { return .repeated in state.keys[key] }
 key_prepeated_curr_state :: proc(key: Key_Code) -> bool {
-    panic("Not implemented yet") // TODO
+    assert(curr_state != nil, fmt.tprintf("To use `%s` (which was most likely called by `key_repeated`) you must provide a valid pointer for the current state. To fix this issue either provide a valid pointer to a `Input_state` or use `set_current_input_state`.", #procedure))
+    return .repeated in curr_state.keys[key]
 }
 
 
