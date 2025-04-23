@@ -132,7 +132,7 @@ handle_event :: proc(event: ^sapp.Event, state: ^Input_State) {
                                 r = to_upper(r)
                             }
                         }
-                        if key_down(.LEFT_ALT) || key_down(.RIGHT_ALT) {
+                        if key_down(.LEFT_ALT, state) || key_down(.RIGHT_ALT, state) {
                             r = to_special(r)
                         }
 
