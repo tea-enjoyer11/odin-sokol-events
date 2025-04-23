@@ -373,6 +373,39 @@ get_scroll_delta_curr_state :: proc() -> Vec2 {
     return curr_state.mscroll
 }
 
+// returns true if the mousebtn is down
+mouse_down :: proc{ mouse_down_state, mouse_down_curr_state }
+mouse_down_state :: proc(btn: Mouse_Button, state: ^Input_State) -> bool { return .down in state.mouse_buttons[btn] }
+mouse_down_curr_state :: proc(btn: Mouse_Button) -> bool {
+    assert(curr_state != nil, fmt.tprintf("To use `%s` (which was most likely called by `mouse_down`) you must provide a valid pointer for the current state. To fix this issue either provide a valid pointer to a `Input_state` or use `set_current_input_state`.", #procedure))
+    return .down in curr_state.mouse_buttons[btn]
+}
+
+// returns true if the mousebtn is pressed THIS frame
+mouse_pressed :: proc{ mouse_pressed_state, mouse_pressed_curr_state }
+mouse_pressed_state :: proc(btn: Mouse_Button, state: ^Input_State) -> bool { return .pressed in state.mouse_buttons[btn] }
+mouse_pressed_curr_state :: proc(btn: Mouse_Button) -> bool {
+    assert(curr_state != nil, fmt.tprintf("To use `%s` (which was most likely called by `mouse_pressed`) you must provide a valid pointer for the current state. To fix this issue either provide a valid pointer to a `Input_state` or use `set_current_input_state`.", #procedure))
+    return .pressed in curr_state.mouse_buttons[btn]
+}
+
+// returns true if the mousebtn is up
+mouse_up :: proc{ mouse_up_state, mouse_up_curr_state }
+mouse_up_state :: proc(btn: Mouse_Button, state: ^Input_State) -> bool { return .down not_in state.mouse_buttons[btn] && .pressed not_in state.mouse_buttons[btn] }
+mouse_up_curr_state :: proc(btn: Mouse_Button) -> bool {
+    assert(curr_state != nil, fmt.tprintf("To use `%s` (which was most likely called by `mouse_up`) you must provide a valid pointer for the current state. To fix this issue either provide a valid pointer to a `Input_state` or use `set_current_input_state`.", #procedure))
+    return .down not_in curr_state.mouse_buttons[btn] && .pressed not_in curr_state.mouse_buttons[btn]
+}
+
+// returns true if the mousebtn is released THIS frame
+mouse_released :: proc{ mouse_released_state, mouse_released_curr_state }
+mouse_released_state :: proc(btn: Mouse_Button, state: ^Input_State) -> bool { return .released in state.mouse_buttons[btn] }
+mouse_released_curr_state :: proc(btn: Mouse_Button) -> bool {
+    assert(curr_state != nil, fmt.tprintf("To use `%s` (which was most likely called by `mouse_released`) you must provide a valid pointer for the current state. To fix this issue either provide a valid pointer to a `Input_state` or use `set_current_input_state`.", #procedure))
+    return .released in curr_state.mouse_buttons[btn]
+}
+
+
 // return true if the mouse cursor is inside the window's frame
 mouse_in_window :: proc{ mouse_in_window_state, mouse_in_window_curr_state }
 mouse_in_window_state :: proc(state: ^Input_State) -> bool { return state.m_in_window }
@@ -390,6 +423,14 @@ key_down_state :: proc(key: Key_Code, state: ^Input_State) -> bool { return .dow
 key_down_curr_state :: proc(key: Key_Code) -> bool {
     assert(curr_state != nil, fmt.tprintf("To use `%s` (which was most likely called by `key_down`) you must provide a valid pointer for the current state. To fix this issue either provide a valid pointer to a `Input_state` or use `set_current_input_state`.", #procedure))
     return .down in curr_state.keys[key]
+}
+
+// return true if the key is up
+key_up :: proc{ key_up_state, key_up_curr_state }
+key_up_state :: proc(key: Key_Code, state: ^Input_State) -> bool { return .down not_in state.keys[key] && .pressed not_in state.keys[key] }
+key_up_curr_state :: proc(key: Key_Code) -> bool {
+    assert(curr_state != nil, fmt.tprintf("To use `%s` (which was most likely called by `key_up`) you must provide a valid pointer for the current state. To fix this issue either provide a valid pointer to a `Input_state` or use `set_current_input_state`.", #procedure))
+    return .down not_in curr_state.keys[key] && .pressed not_in curr_state.keys[key]
 }
 
 // return true if the key is down in THIS frame
