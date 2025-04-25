@@ -13,6 +13,7 @@ mouse_down | IsMouseButtonDown | Returns `true` if the mousebutton is pressed, o
 mouse_up | IsMouseButtonUp | Returns `true` if the mousebutton is not pressed, otherwise `false`.
 mouse_pressed | IsMouseButtonPressed | Returns `true` if the mousebutton is pressed this frame, otherwise `false`.
 mouse_released | IsMouseButtonReleased | Returns `true` if the mousebutton is released this frame, otherwise `false`.
+get_pressed_keys | | Returns a dynamic array of all pressed keys during this frame.
 key_down | IsKeyDown | Returns `true` if the key is pressed, otherwise `false`.
 key_up | IsKeyUp | Returns `true` if the key is not pressed, otherwise `false`.
 key_pressed | IsKeyPressed | Returns `true` if the key is pressed this frame, otherwise `false`.

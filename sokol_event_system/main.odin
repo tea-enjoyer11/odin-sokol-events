@@ -347,6 +347,26 @@ get_input_buffer_curr_state :: proc() -> strings.Builder {
     return b
 }
 
+get_pressed_keys :: proc{ get_pressed_keys_state, get_pressed_keys_curr_state }
+get_pressed_keys_state :: proc(state: ^Input_State) -> [dynamic]Key_Code {
+    arr: [dynamic]Key_Code
+    for key, val in state._tracked_keys {
+        if val {
+            append(&arr, key)
+        }
+    }
+    return arr
+}
+get_pressed_keys_curr_state :: proc() -> [dynamic]Key_Code {
+    arr: [dynamic]Key_Code
+    for key, val in curr_state._tracked_keys {
+        if val {
+            append(&arr, key)
+        }
+    }
+    return arr
+}
+
 
 // :mouse procs
 

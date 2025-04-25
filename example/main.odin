@@ -199,6 +199,8 @@ frame :: proc "c" () {
     }
 
     sevent.set_current_input_state(&state.input_state)
+    curr_keys := sevent.get_pressed_keys(&state.input_state)
+    defer delete(curr_keys)
     fmt.println(
         // sevent.key_down(.A, &state.input_state),
         // sevent.key_down(.A),
@@ -207,6 +209,7 @@ frame :: proc "c" () {
         // state.input_state._last_keys[.A], state.input_state.keys[.A], state.input_state.repeated_keys[.A]
         // sevent.key_down(.A), sevent.key_repeated(.A),
         sevent.get_input_string(&state.input_state),
+        curr_keys,
     )
 
     sg.begin_pass({ action = dframe.pass_action, swapchain = sglue.swapchain() })
